@@ -12,12 +12,22 @@ GitHub: github.com/deoekundayo
 Portfolio: deosportfolio.netlify.app
 3. Do NOT add employers, projects, degrees, certifications, or skills not in the base resume.
 4. Do NOT paste the job description or add company-specific sections.
-5. REWORD the Professional Summary for the target job — emphasize technologies and experience that match the job description.
+5. PROFESSIONAL SUMMARY: Start from this base and reword for the target job (same facts only):
+"Full Stack Developer with a background in customer service and a strong commitment to building a career in technology. Completed the University of Texas at Austin Full Stack Software Development Certificate, where I gained hands-on experience developing responsive web applications and working with front-end and back-end technologies, including HTML, CSS, JavaScript, Node.js, Express.js, and REST APIs. Enjoy solving problems, learning new technologies, and creating applications that provide a positive user experience. Known for being dependable, adaptable, and eager to contribute while continuing to grow as a developer."
+Adjust the role title, emphasized technologies, and phrasing to match the job description. Do not add new employers, degrees, or skills.
 6. REORDER Technical Skills category lines and skills within each line to match the job. Format: Category: skill1, skill2, skill3 (one category per line).
 7. PROJECTS: Include ONLY the 2–3 most relevant projects from the base resume for this job. Omit projects that do not fit. Reorder remaining projects with the best match first. Reorder bullets within each project to highlight job-relevant work. Use at most 3 bullets per project.
-8. Reorder Education entries when relevant (e.g., analytics jobs → emphasize Google Data Analytics).
+8. EDUCATION & TRAINING: Include the 2–4 most relevant entries for the job from: UT Austin Full Stack Certificate, AWS re/Start (Per Scholas, Aug 2024), Google Data Analytics (Sep 2023), freeCodeCamp Full Stack curriculum, CPCC Associate Degree (May 2015). Reorder by relevance. Emphasize matching bullets; max 3 per entry.
 9. Work Experience and Developer Mindset must stay truthful — same employers, dates, and bullet facts.
-10. Output plain text only (section title on its own line, bullets with •).`;
+10. Output plain text only (section title on its own line, bullets with •).
+
+CANDIDATE BACKGROUND (use for tailoring — no new facts):
+- CPCC Associate in General Education, May 2015
+- UT Austin Full Stack Software Development Certificate (HTML, CSS, JS, Node, Express, APIs, responsive design)
+- Per Scholas AWS re/Start Cloud Practitioner, August 2024 (AWS, cloud, IAM, security)
+- Google Data Analytics Certificate, September 2023 (SQL, spreadsheets, visualization)
+- freeCodeCamp Full Stack Developer curriculum (HTML, CSS, JS, responsive design, projects)
+- Technical areas: web dev, cloud computing, data analytics, Git/GitHub, JSON, Flexbox, CSS Grid`;
 
 function getBaseResumeText() {
   return IndeedResumeFormat.buildTailoredResumeText(

@@ -47,6 +47,14 @@ const JOB_TECH_TERMS = [
   "accessibility",
   "ui",
   "ux",
+  "flexbox",
+  "grid",
+  "json",
+  "spreadsheet",
+  "visualization",
+  "iam",
+  "security",
+  "freecodecamp",
 ];
 
 function jobKeywords(job) {
@@ -73,53 +81,83 @@ function buildHeader(structure) {
   return [h.name, h.contact, h.linkedin, h.github, h.portfolio].join("\n");
 }
 
+function resolveSummaryRole(jobTitle) {
+  const title = (jobTitle || "").trim().replace(/[^\w\s\-\/]/g, "").slice(0, 70);
+  if (!title) return "Full Stack Developer";
+  if (/developer|engineer|programmer|analyst|architect|designer/i.test(title)) return title;
+  return "Full Stack Developer";
+}
+
+function buildSummaryTechList(focus, keywords) {
+  const core = ["HTML", "CSS", "JavaScript", "Node.js", "Express.js", "REST APIs"];
+  const optional = ["React", "MongoDB", "SQL", "Git", "GitHub", "MySQL"];
+  const pool = [...core];
+
+  for (const tech of optional) {
+    const key = tech.toLowerCase();
+    if (
+      (focus.includes(key) || relevanceScore(key, keywords) > 0) &&
+      !pool.some((p) => p.toLowerCase() === key)
+    ) {
+      pool.push(tech);
+    }
+  }
+
+  pool.sort((a, b) => relevanceScore(b, keywords) - relevanceScore(a, keywords));
+  return pool.slice(0, 8).join(", ");
+}
+
+function tailorSummarySentence(sentence, job, focus, keywords, techList) {
+  const title = resolveSummaryRole(job.title);
+  let text = sentence;
+
+  if (/^Full Stack Developer with a background/i.test(text)) {
+    text = text.replace(/^Full Stack Developer/, title);
+    return text;
+  }
+
+  if (/Completed the University of Texas at Austin/i.test(text)) {
+    return `Completed the University of Texas at Austin Full Stack Software Development Certificate, where I gained hands-on experience developing responsive web applications and working with front-end and back-end technologies, including ${techList}.`;
+  }
+
+  if (/^Enjoy solving problems/i.test(text)) {
+    if (focus.some((f) => ["analytics", "sql", "data", "excel", "visualization", "spreadsheet"].includes(f))) {
+      return "Enjoy analyzing data, learning new tools, and translating technical information into clear, actionable insights.";
+    }
+    if (focus.some((f) => ["aws", "cloud", "security"].includes(f))) {
+      return "Enjoy solving technical problems, learning cloud and security concepts, and building reliable solutions.";
+    }
+    if (focus.some((f) => ["react", "frontend", "css", "html", "ui", "ux", "responsive", "flexbox", "grid"].includes(f))) {
+      return "Enjoy solving front-end challenges, learning new technologies, and creating responsive applications that provide a positive user experience.";
+    }
+    if (focus.some((f) => ["node", "express", "api", "rest", "backend", "mongodb", "sql"].includes(f))) {
+      return "Enjoy solving technical problems, learning new back-end tools, and building reliable applications that provide a positive user experience.";
+    }
+    return text;
+  }
+
+  if (/^Known for being dependable/i.test(text)) {
+    if (focus.includes("react") || focus.includes("javascript")) {
+      return "Known for being dependable, adaptable, and eager to contribute on development teams while continuing to grow as a developer.";
+    }
+    return text;
+  }
+
+  return text;
+}
+
 function tailorProfessionalSummary(section, job, keywords) {
   const normalized = section.paragraph.replace(/\s+/g, " ").trim();
   const sentences = normalized.match(/[^.!?]+[.!?]+/g) || [normalized];
   const focus = extractJobFocus(job);
-  const title = (job.title || "").trim();
-  const safeTitle = title.replace(/[^\w\s\-\/]/g, "").slice(0, 70);
+  const techList = buildSummaryTechList(focus, keywords);
 
-  const scored = sentences.map((s) => ({
-    text: s.trim(),
-    score: relevanceScore(s, keywords),
-  }));
-  scored.sort((a, b) => b.score - a.score);
+  const tailored = sentences.map((s) =>
+    tailorSummarySentence(s.trim(), job, focus, keywords, techList)
+  );
 
-  const relevant = scored.filter((s) => s.score > 0);
-  const pool = relevant.length >= 2 ? relevant : scored;
-  const kept = pool.slice(0, Math.max(2, Math.min(pool.length, 4)));
-
-  let lead = kept[0].text;
-
-  if (safeTitle && /developer|engineer|programmer|analyst|designer|architect/i.test(safeTitle)) {
-    if (/^Entry-level full-stack developer/i.test(lead)) {
-      lead = lead.replace(
-        /^Entry-level full-stack developer/i,
-        `Entry-level ${safeTitle} with full-stack development experience`
-      );
-    } else if (!lead.toLowerCase().includes(safeTitle.toLowerCase())) {
-      lead = `Motivated ${safeTitle} candidate with hands-on project experience. ${lead}`;
-    }
-  }
-
-  if (focus.length > 0) {
-    const focusPhrase = focus.slice(0, 4).join(", ");
-    if (!focus.every((f) => lead.toLowerCase().includes(f))) {
-      lead = lead.replace(
-        /using JavaScript, React, Node\.js, Express, and database/i,
-        `with strengths in ${focusPhrase} and related full-stack technologies`
-      );
-      if (lead === kept[0].text && !lead.toLowerCase().includes(focus[0])) {
-        lead = `${lead.replace(/\.$/, "")}, with practical experience in ${focusPhrase}.`;
-      }
-    }
-  }
-
-  const ordered = [lead, ...kept.slice(1).map((x) => x.text)];
-  const tailored = ordered.join(" ").replace(/\s+/g, " ").trim();
-
-  return `${section.title}\n${tailored}`;
+  const body = tailored.join(" ").replace(/\s+/g, " ").trim();
+  return `${section.title}\n${body}`;
 }
 
 function tailorSkillLine(line, keywords) {
@@ -135,11 +173,90 @@ function tailorSkillLine(line, keywords) {
   return `${category} ${items.join(", ")}`;
 }
 
-function buildTechnicalSkills(section, keywords) {
-  const lines = [...section.lines]
+function buildTechnicalSkills(section, keywords, job) {
+  const focus = extractJobFocus(job);
+  let lines = [...section.lines];
+
+  if (focus.some((f) => ["aws", "cloud", "security"].includes(f))) {
+    lines = lines.sort((a, b) => {
+      const aCloud = /^Cloud Computing:/i.test(a) ? 10 : 0;
+      const bCloud = /^Cloud Computing:/i.test(b) ? 10 : 0;
+      return bCloud + relevanceScore(b, keywords) - (aCloud + relevanceScore(a, keywords));
+    });
+  }
+  if (focus.some((f) => ["analytics", "sql", "data", "excel", "visualization"].includes(f))) {
+    lines = lines.sort((a, b) => {
+      const aData = /^Data Analytics:/i.test(a) ? 10 : 0;
+      const bData = /^Data Analytics:/i.test(b) ? 10 : 0;
+      return bData + relevanceScore(b, keywords) - (aData + relevanceScore(a, keywords));
+    });
+  }
+
+  lines = lines
     .sort((a, b) => relevanceScore(b, keywords) - relevanceScore(a, keywords))
     .map((line) => tailorSkillLine(line, keywords));
   return `${section.title}\n${lines.join("\n")}`;
+}
+
+function scoreEducationBlock(block, keywords, job) {
+  const text = `${block.title} ${block.bullets.join(" ")}`;
+  let score = relevanceScore(text, keywords);
+  const combined = `${job.title || ""} ${job.description || ""}`.toLowerCase();
+
+  if (block.tags) {
+    for (const tag of block.tags) {
+      if (combined.includes(tag) || keywords.has(tag)) score += 2;
+    }
+  }
+
+  if (/full.?stack|software|developer|engineer|web|frontend|backend/.test(combined) && /Texas at Austin|freeCodeCamp/i.test(block.title)) {
+    score += 6;
+  }
+  if (/cloud|aws|devops|infrastructure/.test(combined) && /AWS re\/Start|Per Scholas/i.test(block.title)) {
+    score += 6;
+  }
+  if (/data|analyst|analytics|sql|bi|business intelligence/.test(combined) && /Google Data Analytics/i.test(block.title)) {
+    score += 6;
+  }
+  if (/freecodecamp|self.?taught|bootcamp/.test(combined) && /freeCodeCamp/i.test(block.title)) {
+    score += 4;
+  }
+
+  return score;
+}
+
+function selectEducationBlocks(blocks, keywords, job) {
+  const scored = blocks.map((block) => ({
+    block,
+    score: scoreEducationBlock(block, keywords, job),
+  }));
+  scored.sort((a, b) => b.score - a.score);
+
+  const minEntries = 2;
+  const maxEntries = 4;
+  let selected = scored.filter((s) => s.score >= 3);
+  if (selected.length < minEntries) {
+    selected = scored.slice(0, minEntries);
+  }
+  return selected.slice(0, maxEntries).map((s) => s.block);
+}
+
+function tailorEducationBullets(block, keywords) {
+  return [...block.bullets]
+    .sort((a, b) => relevanceScore(b, keywords) - relevanceScore(a, keywords))
+    .slice(0, 3);
+}
+
+function buildEducationSection(section, keywords, job) {
+  const selected = selectEducationBlocks(section.blocks, keywords, job);
+  const parts = [section.title];
+  for (const b of selected) {
+    const bullets = tailorEducationBullets(b, keywords)
+      .map((line) => `• ${line.replace(/^•\s*/, "")}`)
+      .join("\n");
+    parts.push(`${b.title}\n${bullets}`);
+  }
+  return parts.join("\n");
 }
 
 function scoreProject(block, keywords, job) {
@@ -238,13 +355,13 @@ function buildTailoredResumeText(job, structure) {
         parts.push(tailorProfessionalSummary(section, job, keywords));
         break;
       case "Technical Skills":
-        parts.push(buildTechnicalSkills(section, keywords));
+        parts.push(buildTechnicalSkills(section, keywords, job));
         break;
       case "Projects":
         parts.push(buildProjects(section, keywords, job));
         break;
       case "Education & Training":
-        parts.push(buildBlockSection(section, keywords));
+        parts.push(buildEducationSection(section, keywords, job));
         break;
       case "Work Experience":
       case "Developer Mindset":
@@ -270,5 +387,7 @@ if (typeof globalThis !== "undefined") {
     tailorProfessionalSummary,
     selectProjects,
     scoreProject,
+    selectEducationBlocks,
+    scoreEducationBlock,
   };
 }

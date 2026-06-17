@@ -13,22 +13,18 @@ const RESUME_STRUCTURE = {
   sections: [
     {
       title: "Professional Summary",
-      paragraph: `Entry-level full-stack developer with hands-on experience building responsive web applications
-and interactive user interfaces through academic training and personal projects. Background in
-frontend and backend development using JavaScript, React, Node.js, Express, and database
-technologies, with growing experience writing test scripts, troubleshooting application issues,
-and translating user needs into functional software solutions. Known for being adaptable,
-collaborative, and eager to learn in team-driven technical environments.`,
+      paragraph: `Full Stack Developer with a background in customer service and a strong commitment to building a career in technology. Completed the University of Texas at Austin Full Stack Software Development Certificate, where I gained hands-on experience developing responsive web applications and working with front-end and back-end technologies, including HTML, CSS, JavaScript, Node.js, Express.js, and REST APIs. Enjoy solving problems, learning new technologies, and creating applications that provide a positive user experience. Known for being dependable, adaptable, and eager to contribute while continuing to grow as a developer.`,
     },
     {
       title: "Technical Skills",
       lines: [
         "Languages: HTML5, CSS3, JavaScript (ES6+)",
-        "Frontend Development: React, Responsive Design, Bootstrap, Tailwind CSS, Progressive UI Development",
-        "Backend Development: Node.js, Express.js, REST APIs, MongoDB, SQL, MySQL fundamentals, Backend Routing & Server Logic",
-        "Tools & Technologies: Mocha, Chai, Supertest, Git, GitHub, VS Code, Chrome DevTools, Cursor, Microsoft Copilot",
+        "Frontend Development: Responsive Web Design, Flexbox, CSS Grid, React, Bootstrap, Tailwind CSS",
+        "Backend Development: Node.js, Express.js, REST APIs, JSON, MongoDB, SQL, MySQL fundamentals",
+        "Cloud Computing: AWS core services and cloud concepts, identity and access management fundamentals, cloud security basics",
+        "Data Analytics: SQL, data visualization, spreadsheet analysis, business data interpretation",
+        "Tools & Technologies: Git, GitHub, VS Code, Chrome DevTools, Cursor, Netlify, Mocha, Chai, Supertest",
         "Workflow & Collaboration: Technical Documentation, Debugging, Agile Collaboration, Version Control, Cross-Functional Communication",
-        "Currently Expanding In: Automated UI testing, relational database design, scalable application architecture, interactive browser graphics concepts",
       ],
     },
     {
@@ -73,35 +69,48 @@ collaborative, and eager to learn in team-driven technical environments.`,
       title: "Education & Training",
       blocks: [
         {
-          title: "Full Stack Software Development Program — The University of Texas at Austin — Completed 2026",
+          title: "Full Stack Software Development Certificate — University of Texas at Austin — Completed",
+          tags: ["full stack", "javascript", "node", "express", "api", "rest", "responsive", "frontend", "backend", "html", "css"],
           bullets: [
-            "Developing full-stack applications using frontend and backend technologies including JavaScript, React, Node.js, and Express.",
-            "Gaining experience with application architecture, API integration, debugging, and collaborative development workflows.",
-            "Building hands-on projects involving databases, routing, responsive interfaces, and software testing concepts.",
+            "Training included front-end and back-end web development concepts, responsive web design, JavaScript, Node.js, Express.js, APIs, and software development practices.",
+            "Gained hands-on experience developing responsive web applications and applying collaborative development workflows.",
+            "Built project experience with routing, interfaces, debugging, and full-stack application fundamentals.",
           ],
         },
         {
-          title: "AWS re/Start Program — Per Scholas — Completed 2024",
+          title: "AWS re/Start Cloud Practitioner Training — Per Scholas — Completed August 2024",
+          tags: ["aws", "cloud", "security", "linux", "networking"],
           bullets: [
-            "Completed hands-on technical training covering Linux systems, networking fundamentals, scripting, and cloud technologies.",
-            "Strengthened troubleshooting and analytical thinking skills through collaborative technical labs and real-world scenarios.",
-            "Worked in team-oriented environments requiring communication, adaptability, and structured problem solving.",
+            "Covered cloud computing fundamentals, AWS services, professional development, and technical career readiness.",
+            "Studied AWS core services, identity and access management fundamentals, and cloud security basics.",
+            "Strengthened troubleshooting and analytical thinking through collaborative technical labs.",
           ],
         },
         {
-          title: "Google Data Analytics Professional Certificate — Completed 2023",
+          title: "Google Data Analytics Professional Certificate — Google Career Certificates — Completed September 2023",
+          tags: ["analytics", "sql", "data", "excel", "tableau", "visualization", "spreadsheet"],
           bullets: [
-            "Built a foundation in data interpretation, analytical thinking, and organizing technical information into actionable insights.",
-            "Worked with spreadsheets, SQL, and data visualization concepts to analyze and communicate findings effectively.",
-            "Strengthened attention to detail and problem-solving skills through project-based learning.",
+            "Training in data analysis, spreadsheets, SQL, data visualization, and analytics workflows.",
+            "Practiced spreadsheet analysis, business data interpretation, and communicating analytical findings.",
+            "Strengthened attention to detail and structured problem-solving through project-based learning.",
           ],
         },
         {
-          title: "Associate in General Education — Central Piedmont Community College (CPCC) — Completed 2015",
+          title: "freeCodeCamp — Full Stack Developer Curriculum — Self-Directed Learning",
+          tags: ["html", "css", "javascript", "responsive", "frontend", "full stack", "git"],
           bullets: [
-            "Completed coursework emphasizing communication, critical thinking, mathematics, and written analysis.",
-            "Developed strong foundational skills in organization, collaboration, and information processing.",
-            "Strengthened interpersonal and professional communication through diverse academic coursework.",
+            "Completed coursework in HTML, CSS, JavaScript, and Responsive Web Design.",
+            "Built web development projects applying front-end fundamentals and version control with Git & GitHub.",
+            "Continued self-directed technical education alongside formal certificate programs.",
+          ],
+        },
+        {
+          title: "Associate Degree in General Education — Central Piedmont Community College (CPCC) — Graduated May 2015",
+          tags: ["education", "communication", "mathematics"],
+          bullets: [
+            "Broad academic foundation across humanities, social sciences, natural sciences, and mathematics.",
+            "Developed strong communication, critical thinking, and written analysis skills.",
+            "Strengthened organization, collaboration, and professional communication through diverse coursework.",
           ],
         },
       ],
@@ -154,6 +163,15 @@ const PROFILE = {
   linkedin: "linkedin.com/in/adeolaekundayo",
   github: "github.com/deoekundayo",
   portfolio: "deosportfolio.netlify.app",
+  learning: {
+    degrees: ["Associate Degree in General Education — CPCC — May 2015"],
+    certificates: [
+      "UT Austin Full Stack Software Development Certificate",
+      "AWS re/Start Cloud Practitioner — Per Scholas — August 2024",
+      "Google Data Analytics Professional Certificate — September 2023",
+      "freeCodeCamp Full Stack Developer curriculum",
+    ],
+  },
 };
 
 if (typeof globalThis !== "undefined") {
