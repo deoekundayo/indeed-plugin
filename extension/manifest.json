@@ -18,7 +18,6 @@
         "lib/naming.js",
         "lib/resume-format.js",
         "lib/base-resume.js",
-        "lib/base-cover-letter.js",
         "lib/cover-letter-format.js",
         "lib/documents.js",
         "content.js"

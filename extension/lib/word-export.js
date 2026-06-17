@@ -6,6 +6,8 @@ const RESUME_NAME = "ADEOLA EKUNDAYO";
 const HEADER_LINE_COUNT = 5;
 const TIGHT = "margin:0;line-height:1.15;";
 const SECTION_GAP = "margin:12pt 0 0 0;line-height:1.15;";
+const COVER_PARA = "margin:0 0 10pt 0;line-height:1.35;text-align:left;";
+const COVER_SIGN = "margin:0;line-height:1.25;";
 
 const RESUME_HEADERS = new Set([
   "Professional Summary",
@@ -56,6 +58,36 @@ function isSubheaderLine(line, index) {
   if (RESUME_HEADERS.has(t)) return false;
   if (index < HEADER_LINE_COUNT) return false;
   return / — | \| Completed |\.(com|app|netlify)/i.test(t);
+}
+
+function coverLetterHtml(text) {
+  const blocks = String(text || "")
+    .split(/\n\s*\n/)
+    .map((b) => b.trim())
+    .filter(Boolean);
+
+  const parts = [];
+  let inSignOff = false;
+
+  for (const block of blocks) {
+    if (inSignOff || /^Sincerely,?$/i.test(block)) {
+      inSignOff = true;
+      const signLines = block.split("\n").map((l) => l.trim()).filter(Boolean);
+      for (const line of signLines) {
+        parts.push(`<p style="${COVER_SIGN}">${escapeHtml(line)}</p>`);
+      }
+      continue;
+    }
+
+    if (/^Dear .+ Hiring Manager,?$/i.test(block)) {
+      parts.push(`<p style="${COVER_PARA}">${escapeHtml(block)}</p>`);
+      continue;
+    }
+
+    parts.push(`<p style="${COVER_PARA}">${escapeHtml(block.replace(/\s+/g, " "))}</p>`);
+  }
+
+  return parts.join("\n");
 }
 
 function textToHtmlBody(text, isResume) {
@@ -134,7 +166,8 @@ function textToHtmlBody(text, isResume) {
 
 function textToDocxBlob(text, title) {
   const isResume = title === "Resume";
-  const body = textToHtmlBody(text, isResume);
+  const isCoverLetter = title === "Cover Letter";
+  const body = isCoverLetter ? coverLetterHtml(text) : textToHtmlBody(text, isResume);
   const html = `<!DOCTYPE html>
 <html xmlns:o="urn:schemas-microsoft-com:office:office"
       xmlns:w="urn:schemas-microsoft-com:office:word"
@@ -144,8 +177,8 @@ function textToDocxBlob(text, title) {
 <title>${escapeHtml(title || "Document")}</title>
 <!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]-->
 <style>
-  body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; line-height: 1.15; margin: 0; }
-  p { margin: 0; line-height: 1.15; }
+  body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; line-height: 1.35; margin: 0.75in; }
+  p { margin: 0; }
 </style>
 </head>
 <body>${body}</body>

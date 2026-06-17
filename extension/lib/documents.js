@@ -29,27 +29,32 @@ CANDIDATE BACKGROUND (use for tailoring — no new facts):
 - freeCodeCamp Full Stack Developer curriculum (HTML, CSS, JS, responsive design, projects)
 - Technical areas: web dev, cloud computing, data analytics, Git/GitHub, JSON, Flexbox, CSS Grid`;
 
-const COVER_LETTER_SYSTEM_PROMPT = `You tailor cover letters for job applications. STRICT RULES:
-1. Start from this base cover letter and reword for the target job (same facts only — no invented experience):
-"Dear [Company] Hiring Manager,
-I'm reaching out to apply for this opportunity because it represents the kind of work I've been steadily working toward over the past few years.
-My path into tech didn't start in a traditional way. I spent several years working in customer-facing roles, where I learned how to communicate clearly, stay patient under pressure, and take ownership of my responsibilities. During that time, I realized I wanted to build something more long-term for myself, which led me to begin learning web development and design.
-Since then, I've been actively training and building my skills through structured programs and hands-on projects. I've worked through a full stack development program, completed a data analytics certification, and spent a lot of time outside of coursework practicing what I've learned.
-What I've found is that I genuinely enjoy the process of turning ideas into something people can interact with—especially when it comes to layout, design, and making sure things work well across different devices.
-I know there are candidates who may have more experience than I do, but what I bring is consistency, a strong work ethic, and a willingness to keep improving. I take learning seriously, and I've shown that by continuing to build my skills while working full-time. I'm also someone who values structure, organization, and doing things the right way, whether that's following a style guide or documenting my work so others can understand it.
-What draws me to this role specifically is the balance between design and implementation. It aligns with where I am in my journey right now—someone who is still growing, but ready to contribute, collaborate, and continue developing in a real-world environment.
-I would truly appreciate the opportunity to be considered and to continue growing within a team like yours.
+const COVER_LETTER_SYSTEM_PROMPT = `You write cover letters for Adeola Ekundayo. Use this EXACT structure and tone (reword paragraphs for the job, same facts only):
+
+Dear {Company} Hiring Manager,
+
+[Opening] I'm reaching out to apply for this opportunity because it represents the kind of work I've been steadily working toward over the past few years.
+
+[Background] My path into tech didn't start in a traditional way. Customer-facing roles at Paradies Lagardère and Harris Teeter — communication, patience, ownership — led to learning web development.
+
+[Training] Structured programs (UT Austin Full Stack, Google Data Analytics, AWS re/Start, freeCodeCamp as relevant) and hands-on projects from the tailored resume only.
+
+[Passion] What I enjoy — tailor to job (design/UI for frontend roles, data for analytics, cloud for AWS, etc.).
+
+[Strengths] Consistency, work ethic, learning while working full-time, structure, documentation, style guides when relevant.
+
+[Why this role] What draws me to {Job Title} at {Company} — align with job description.
+
+[Close] Appreciate consideration and growing with the team.
+
 Thank you for your time and consideration.
+
 Sincerely,
 Adeola Ekundayo
 d.ekundayo63@gmail.com
-980-358-9112"
-2. Use the company name in the salutation when provided.
-3. Mention the job title in the opening and role-fit paragraph.
-4. Emphasize the most relevant training (UT Austin, Google Analytics, AWS re/Start, freeCodeCamp) and projects from the tailored resume for this job. Omit irrelevant programs.
-5. Reword the passion and role-fit paragraphs to match the job (UI/UX, full-stack, backend, cloud, or analytics focus).
-6. Do NOT add employers, projects, degrees, or skills not in the base resume/cover letter.
-7. Keep the same paragraph structure and professional tone. Plain text only.`;
+980-358-9112
+
+RULES: No date line. No "Re:" line. No placeholders. Only facts from the tailored resume. Mention only projects/certs included in the tailored resume. Do not invent experience.`;
 
 function getBaseResumeText() {
   return IndeedResumeFormat.buildTailoredResumeText(
@@ -63,7 +68,7 @@ function buildTailoredResumeTemplate(job) {
 }
 
 function buildCoverLetterTemplate(job, profile, tailoredResume) {
-  return IndeedCoverLetterFormat.buildTailoredCoverLetterText(job, profile, tailoredResume);
+  return IndeedCoverLetterFormat.buildCoverLetterText(job, profile, tailoredResume);
 }
 
 async function generateWithOpenAI(apiKey, model, systemPrompt, userPrompt) {
@@ -116,7 +121,7 @@ async function generateCoverLetter(job, options) {
       options.openaiApiKey,
       options.openaiModel,
       COVER_LETTER_SYSTEM_PROMPT,
-      `TARGET JOB — tailor cover letter wording and emphasis:\nTitle: ${job.title}\nCompany: ${job.company}\nDescription:\n${(job.description || "").slice(0, 3500)}\n\nTAILORED RESUME (projects & training to reference):\n${tailoredResume.slice(0, 5000)}\n\nTEMPLATE PREVIEW (job-aware — use as guide):\n${templateLetter}`
+      `TARGET JOB:\nTitle: ${job.title}\nCompany: ${job.company}\nDescription:\n${(job.description || "").slice(0, 2500)}\n\nTAILORED RESUME (only source of truth):\n${tailoredResume.slice(0, 5000)}\n\nTEMPLATE PREVIEW (match this structure and tone):\n${templateLetter}`
     );
   }
   return templateLetter;
