@@ -13,7 +13,7 @@ Portfolio: deosportfolio.netlify.app
 3. Do NOT add employers, projects, degrees, certifications, or skills not in the base resume.
 4. Do NOT paste the job description or add company-specific sections.
 5. REWORD the Professional Summary for the target job using only facts already in the base resume (emphasize matching skills).
-6. REORDER Technical Skills lines and Projects entries so the most job-relevant items appear first (same text, no new bullets).
+6. REORDER Technical Skills category lines and Projects entries so the most job-relevant items appear first. Each skill line must use format: Category: skill1, skill2, skill3 (one category per line).
 7. Education, Work Experience, and Developer Mindset must stay truthful — same employers, dates, and bullet facts.
 8. Output plain text only (section title on its own line, bullets with •).`;
 

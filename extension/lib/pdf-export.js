@@ -20,6 +20,16 @@ function isSectionHeader(line) {
   return RESUME_SECTION_TITLES.has(t);
 }
 
+function isSkillCategoryLine(line) {
+  const t = line.trim();
+  if (!t || t.startsWith("•")) return false;
+  if (isSectionHeader(t)) return false;
+  if (/ — | \| Completed /.test(t)) return false;
+  if (/\.(com|app|netlify)/i.test(t)) return false;
+  const colon = t.indexOf(":");
+  return colon > 0 && colon < 50 && t.length > colon + 2;
+}
+
 function isSubheader(line) {
   const t = line.trim();
   if (!t || t.startsWith("•")) return false;
@@ -75,6 +85,30 @@ function textToPdfBlob(text, title, options = {}) {
     y += extraAfter;
   }
 
+  function writeSkillCategoryLine(line) {
+    const colon = line.indexOf(":");
+    const category = line.slice(0, colon + 1);
+    const skills = line.slice(colon + 1).trim();
+    newPageIfNeeded();
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(bodySize);
+    doc.text(category, margin, y);
+    const catWidth = doc.getTextWidth(`${category} `);
+    doc.setFont("helvetica", "normal");
+    const skillLines = doc.splitTextToSize(skills, maxWidth - catWidth);
+    if (skillLines.length === 0) {
+      y += bodySize + 3;
+      return;
+    }
+    doc.text(skillLines[0], margin + catWidth, y);
+    y += bodySize + 3;
+    for (let s = 1; s < skillLines.length; s += 1) {
+      newPageIfNeeded();
+      doc.text(skillLines[s], margin, y);
+      y += bodySize + 3;
+    }
+  }
+
   const rawLines = String(text || "").split("\n");
   let i = 0;
 
@@ -100,6 +134,13 @@ function textToPdfBlob(text, title, options = {}) {
       }
       writeLines([trimmed.toUpperCase()], headerSize, "bold");
       lastWasSectionContent = false;
+      i += 1;
+      continue;
+    }
+
+    if (isResume && isSkillCategoryLine(trimmed)) {
+      writeSkillCategoryLine(trimmed);
+      lastWasSectionContent = true;
       i += 1;
       continue;
     }

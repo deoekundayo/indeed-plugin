@@ -34,6 +34,22 @@ function isContactLine(line, index) {
   );
 }
 
+function isSkillCategoryLine(line) {
+  const t = line.trim();
+  if (!t || t.startsWith("•")) return false;
+  if (/ — | \| Completed /.test(t)) return false;
+  if (/\.(com|app|netlify)/i.test(t)) return false;
+  const colon = t.indexOf(":");
+  return colon > 0 && colon < 50 && t.length > colon + 2;
+}
+
+function skillCategoryHtml(line) {
+  const colon = line.indexOf(":");
+  const category = line.slice(0, colon + 1);
+  const skills = line.slice(colon + 1).trim();
+  return `<p style="${TIGHT}"><b>${escapeHtml(category)}</b> ${escapeHtml(skills)}</p>`;
+}
+
 function isSubheaderLine(line, index) {
   const t = line.trim();
   if (!t || t.startsWith("•")) return false;
@@ -78,6 +94,12 @@ function textToHtmlBody(text, isResume) {
       continue;
     }
 
+    if (isResume && isSkillCategoryLine(trimmed)) {
+      parts.push(skillCategoryHtml(trimmed));
+      i += 1;
+      continue;
+    }
+
     if (isResume && isSubheaderLine(trimmed, i)) {
       parts.push(`<p style="font-weight:bold;${TIGHT}">${escapeHtml(trimmed)}</p>`);
       i += 1;
@@ -96,6 +118,7 @@ function textToHtmlBody(text, isResume) {
       i < lines.length &&
       lines[i].trim() &&
       !RESUME_HEADERS.has(lines[i].trim()) &&
+      !isSkillCategoryLine(lines[i].trim()) &&
       !isSubheaderLine(lines[i].trim(), i) &&
       !lines[i].trim().startsWith("•") &&
       !isContactLine(lines[i].trim(), i)

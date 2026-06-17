@@ -23,9 +23,10 @@ collaborative, and eager to learn in team-driven technical environments.`,
     {
       title: "Technical Skills",
       lines: [
-        "Frontend Development: HTML5, CSS3, JavaScript (ES6+), React, Responsive Design, Bootstrap, Tailwind CSS, Progressive UI Development",
-        "Backend & Databases: Node.js, Express.js, REST APIs, MongoDB, SQL, MySQL fundamentals, Backend Routing & Server Logic",
-        "Testing & Development Tools: Mocha, Chai, Supertest, Git, GitHub, VS Code, Chrome DevTools, Cursor, Microsoft Copilot",
+        "Languages: HTML5, CSS3, JavaScript (ES6+)",
+        "Frontend Development: React, Responsive Design, Bootstrap, Tailwind CSS, Progressive UI Development",
+        "Backend Development: Node.js, Express.js, REST APIs, MongoDB, SQL, MySQL fundamentals, Backend Routing & Server Logic",
+        "Tools & Technologies: Mocha, Chai, Supertest, Git, GitHub, VS Code, Chrome DevTools, Cursor, Microsoft Copilot",
         "Workflow & Collaboration: Technical Documentation, Debugging, Agile Collaboration, Version Control, Cross-Functional Communication",
         "Currently Expanding In: Automated UI testing, relational database design, scalable application architecture, interactive browser graphics concepts",
       ],
