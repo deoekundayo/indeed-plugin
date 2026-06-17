@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Indeed Job Assistant — Settings</title>
+    <style>
+      body {
+        max-width: 520px;
+        margin: 24px auto;
+        font-family: system-ui, sans-serif;
+        padding: 0 16px;
+      }
+      label {
+        display: block;
+        margin-top: 16px;
+        font-weight: 600;
+      }
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 8px;
+        margin-top: 6px;
+        box-sizing: border-box;
+      }
+      button {
+        margin-top: 20px;
+        padding: 10px 16px;
+        background: #2557a7;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .note {
+        color: #555;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      #status {
+        margin-top: 12px;
+        color: #1f6b3a;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Settings</h1>
+    <p class="note">
+      By default, resumes and cover letters are tailored using templates from your base resume
+      (Adeola Ekundayo). Enable OpenAI for stronger, job-specific rewriting.
+    </p>
+    <label>
+      <input type="checkbox" id="useOpenAI" />
+      Use OpenAI for tailoring
+    </label>
+    <label for="openaiApiKey">OpenAI API key</label>
+    <input type="password" id="openaiApiKey" autocomplete="off" />
+    <label for="openaiModel">Model</label>
+    <input type="text" id="openaiModel" value="gpt-4o-mini" />
+    <button type="button" id="save">Save</button>
+    <p id="status"></p>
+    <script src="options.js"></script>
+  </body>
+</html>

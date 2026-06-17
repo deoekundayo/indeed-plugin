@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Indeed Job Assistant",
+  "version": "1.3.2",
+  "description": "Tailored resume and cover letter for Indeed jobs from your base resume.",
+  "permissions": ["storage", "downloads", "activeTab"],
+  "host_permissions": [
+    "https://*.indeed.com/*",
+    "https://api.openai.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.indeed.com/*"],
+      "js": [
+        "lib/naming.js",
+        "lib/resume-format.js",
+        "lib/base-resume.js",
+        "lib/documents.js",
+        "content.js"
+      ],
+      "css": ["styles/panel.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Indeed Job Assistant"
+  },
+  "options_page": "options.html",
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/Adeola_Ekundayo_base_resume.pdf"],
+      "matches": ["https://*.indeed.com/*"]
+    }
+  ]
+}

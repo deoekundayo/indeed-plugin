@@ -1,0 +1,104 @@
+#indeed-job-assistant-panel {
+  position: fixed;
+  top: 80px;
+  right: 16px;
+  z-index: 2147483646;
+  width: 300px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #d4d2d0;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  font-family: "Indeed Sans", "Noto Sans", system-ui, sans-serif;
+  font-size: 13px;
+  color: #2d2d2d;
+}
+
+#indeed-job-assistant-panel .ija-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  background: #2557a7;
+  color: #fff;
+  border-radius: 10px 10px 0 0;
+}
+
+#indeed-job-assistant-panel .ija-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+#indeed-job-assistant-panel .ija-job {
+  padding: 12px 14px;
+  border-bottom: 1px solid #eee;
+}
+
+#indeed-job-assistant-panel .ija-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+#indeed-job-assistant-panel .ija-company {
+  color: #595959;
+}
+
+#indeed-job-assistant-panel .ija-actions {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#indeed-job-assistant-panel .ija-btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #2557a7;
+  background: #fff;
+  color: #2557a7;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#indeed-job-assistant-panel .ija-btn:hover {
+  background: #f2f7ff;
+}
+
+#indeed-job-assistant-panel .ija-primary {
+  background: #2557a7;
+  color: #fff;
+}
+
+#indeed-job-assistant-panel .ija-primary:hover {
+  background: #1d4690;
+}
+
+#indeed-job-assistant-panel .ija-secondary {
+  border-color: #595959;
+  color: #595959;
+}
+
+#indeed-job-assistant-panel .ija-hint {
+  margin: 0 14px 8px;
+  font-size: 11px;
+  color: #767676;
+}
+
+#indeed-job-assistant-panel .ija-status {
+  padding: 0 14px 12px;
+  font-size: 12px;
+  min-height: 18px;
+}
+
+#indeed-job-assistant-panel .ija-ok {
+  color: #1f6b3a;
+}
+
+#indeed-job-assistant-panel .ija-error {
+  color: #a52828;
+}

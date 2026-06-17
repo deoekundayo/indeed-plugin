@@ -1,0 +1,12 @@
+config.yaml
+data/indeed_session.json
+data/applications_log.json
+data/generated/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+*.egg-info/
+dist/
+build/

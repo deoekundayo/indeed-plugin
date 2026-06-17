@@ -1,0 +1,52 @@
+# Copy to config.yaml and fill in your details.
+
+profile:
+  name: "Jane Doe"
+  email: "jane@example.com"
+  phone: "+1 555-0100"
+  field_of_study: "Computer Science"
+  degree: "B.S."
+  graduation_year: 2024
+  location: "Austin, TX"
+  # Keywords that describe roles you want (used for matching)
+  target_roles:
+    - "software engineer"
+    - "backend developer"
+    - "full stack"
+  skills:
+    - Python
+    - JavaScript
+    - SQL
+    - React
+  experience: |
+    Software Engineering Intern, Acme Corp (Summer 2023)
+    - Built REST APIs in Python/FastAPI serving 10k daily users
+    - Wrote unit tests and CI pipelines in GitHub Actions
+  education: |
+    University of Example — B.S. Computer Science, 2024
+    Relevant coursework: Algorithms, Databases, Distributed Systems
+  # Path to your master resume (plain text or markdown)
+  base_resume_path: "data/base_resume.md"
+
+search:
+  query: "software engineer"
+  location: "Austin, TX"
+  # Only jobs with one-click Indeed Apply (easier to automate safely)
+  indeed_apply_only: true
+  max_jobs_per_run: 10
+  min_match_score: 0.45
+
+application:
+  # Pause and ask before each apply (strongly recommended)
+  confirm_each: true
+  max_applications_per_day: 15
+  delay_seconds_between_applies: 8
+
+openai:
+  # Optional: set OPENAI_API_KEY env var instead
+  model: "gpt-4o-mini"
+  # api_key: "sk-..."
+
+paths:
+  output_dir: "data/generated"
+  session_file: "data/indeed_session.json"
