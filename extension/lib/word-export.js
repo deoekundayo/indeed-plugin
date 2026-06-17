@@ -6,8 +6,6 @@ const RESUME_NAME = "ADEOLA EKUNDAYO";
 const HEADER_LINE_COUNT = 5;
 const TIGHT = "margin:0;line-height:1.15;";
 const SECTION_GAP = "margin:12pt 0 0 0;line-height:1.15;";
-const COVER_PARA = "margin:0 0 10pt 0;line-height:1.35;text-align:left;";
-const COVER_SIGN = "margin:0;line-height:1.25;";
 
 const RESUME_HEADERS = new Set([
   "Professional Summary",
@@ -60,37 +58,7 @@ function isSubheaderLine(line, index) {
   return / — | \| Completed |\.(com|app|netlify)/i.test(t);
 }
 
-function coverLetterHtml(text) {
-  const blocks = String(text || "")
-    .split(/\n\s*\n/)
-    .map((b) => b.trim())
-    .filter(Boolean);
-
-  const parts = [];
-  let inSignOff = false;
-
-  for (const block of blocks) {
-    if (inSignOff || /^Sincerely,?$/i.test(block)) {
-      inSignOff = true;
-      const signLines = block.split("\n").map((l) => l.trim()).filter(Boolean);
-      for (const line of signLines) {
-        parts.push(`<p style="${COVER_SIGN}">${escapeHtml(line)}</p>`);
-      }
-      continue;
-    }
-
-    if (/^Dear .+ Hiring Manager,?$/i.test(block)) {
-      parts.push(`<p style="${COVER_PARA}">${escapeHtml(block)}</p>`);
-      continue;
-    }
-
-    parts.push(`<p style="${COVER_PARA}">${escapeHtml(block.replace(/\s+/g, " "))}</p>`);
-  }
-
-  return parts.join("\n");
-}
-
-function textToHtmlBody(text, isResume) {
+function textToHtmlBody(text) {
   const lines = String(text || "").split("\n");
   const parts = [];
   let i = 0;
@@ -104,7 +72,7 @@ function textToHtmlBody(text, isResume) {
       continue;
     }
 
-    if (isResume && trimmed === RESUME_NAME && i === 0) {
+    if (trimmed === RESUME_NAME && i === 0) {
       parts.push(
         `<p style="font-size:18pt;font-weight:bold;${TIGHT}text-transform:uppercase;">${escapeHtml(trimmed)}</p>`
       );
@@ -112,13 +80,13 @@ function textToHtmlBody(text, isResume) {
       continue;
     }
 
-    if (isResume && isContactLine(trimmed, i)) {
+    if (isContactLine(trimmed, i)) {
       parts.push(`<p style="${TIGHT}">${escapeHtml(trimmed)}</p>`);
       i += 1;
       continue;
     }
 
-    if (isResume && RESUME_HEADERS.has(trimmed)) {
+    if (RESUME_HEADERS.has(trimmed)) {
       parts.push(
         `<p style="font-size:12pt;font-weight:bold;${SECTION_GAP}text-transform:uppercase;">${escapeHtml(trimmed)}</p>`
       );
@@ -126,13 +94,13 @@ function textToHtmlBody(text, isResume) {
       continue;
     }
 
-    if (isResume && isSkillCategoryLine(trimmed)) {
+    if (isSkillCategoryLine(trimmed)) {
       parts.push(skillCategoryHtml(trimmed));
       i += 1;
       continue;
     }
 
-    if (isResume && isSubheaderLine(trimmed, i)) {
+    if (isSubheaderLine(trimmed, i)) {
       parts.push(`<p style="font-weight:bold;${TIGHT}">${escapeHtml(trimmed)}</p>`);
       i += 1;
       continue;
@@ -165,9 +133,7 @@ function textToHtmlBody(text, isResume) {
 }
 
 function textToDocxBlob(text, title) {
-  const isResume = title === "Resume";
-  const isCoverLetter = title === "Cover Letter";
-  const body = isCoverLetter ? coverLetterHtml(text) : textToHtmlBody(text, isResume);
+  const body = textToHtmlBody(text);
   const html = `<!DOCTYPE html>
 <html xmlns:o="urn:schemas-microsoft-com:office:office"
       xmlns:w="urn:schemas-microsoft-com:office:word"

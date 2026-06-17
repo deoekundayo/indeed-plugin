@@ -1,5 +1,5 @@
 /**
- * Tailored resume & cover letter — Word format, truthful to base resume.
+ * Tailored resume generation — Word format, truthful to base resume.
  */
 
 const RESUME_SYSTEM_PROMPT = `You tailor resumes for job applications. STRICT RULES:
@@ -29,33 +29,6 @@ CANDIDATE BACKGROUND (use for tailoring — no new facts):
 - freeCodeCamp Full Stack Developer curriculum (HTML, CSS, JS, responsive design, projects)
 - Technical areas: web dev, cloud computing, data analytics, Git/GitHub, JSON, Flexbox, CSS Grid`;
 
-const COVER_LETTER_SYSTEM_PROMPT = `You write cover letters for Adeola Ekundayo. Use this EXACT structure and tone (reword paragraphs for the job, same facts only):
-
-Dear {Company} Hiring Manager,
-
-[Opening] I'm reaching out to apply for this opportunity because it represents the kind of work I've been steadily working toward over the past few years.
-
-[Background] My path into tech didn't start in a traditional way. Customer-facing roles at Paradies Lagardère and Harris Teeter — communication, patience, ownership — led to learning web development.
-
-[Training] Structured programs (UT Austin Full Stack, Google Data Analytics, AWS re/Start, freeCodeCamp as relevant) and hands-on projects from the tailored resume only.
-
-[Passion] What I enjoy — tailor to job (design/UI for frontend roles, data for analytics, cloud for AWS, etc.).
-
-[Strengths] Consistency, work ethic, learning while working full-time, structure, documentation, style guides when relevant.
-
-[Why this role] What draws me to {Job Title} at {Company} — align with job description.
-
-[Close] Appreciate consideration and growing with the team.
-
-Thank you for your time and consideration.
-
-Sincerely,
-Adeola Ekundayo
-d.ekundayo63@gmail.com
-980-358-9112
-
-RULES: No date line. No "Re:" line. No placeholders. Only facts from the tailored resume. Mention only projects/certs included in the tailored resume. Do not invent experience.`;
-
 function getBaseResumeText() {
   return IndeedResumeFormat.buildTailoredResumeText(
     { title: "", company: "", description: "" },
@@ -65,10 +38,6 @@ function getBaseResumeText() {
 
 function buildTailoredResumeTemplate(job) {
   return IndeedResumeFormat.buildTailoredResumeText(job, IndeedBaseResume.RESUME_STRUCTURE);
-}
-
-function buildCoverLetterTemplate(job, profile, tailoredResume) {
-  return IndeedCoverLetterFormat.buildCoverLetterText(job, profile, tailoredResume);
 }
 
 async function generateWithOpenAI(apiKey, model, systemPrompt, userPrompt) {
@@ -111,28 +80,10 @@ async function generateTailoredResume(job, options) {
   return templateResume;
 }
 
-async function generateCoverLetter(job, options) {
-  const { PROFILE } = globalThis.IndeedBaseResume;
-  const tailoredResume = buildTailoredResumeTemplate(job);
-  const templateLetter = buildCoverLetterTemplate(job, PROFILE, tailoredResume);
-
-  if (options?.openaiApiKey) {
-    return generateWithOpenAI(
-      options.openaiApiKey,
-      options.openaiModel,
-      COVER_LETTER_SYSTEM_PROMPT,
-      `TARGET JOB:\nTitle: ${job.title}\nCompany: ${job.company}\nDescription:\n${(job.description || "").slice(0, 2500)}\n\nTAILORED RESUME (only source of truth):\n${tailoredResume.slice(0, 5000)}\n\nTEMPLATE PREVIEW (match this structure and tone):\n${templateLetter}`
-    );
-  }
-  return templateLetter;
-}
-
 if (typeof globalThis !== "undefined") {
   globalThis.IndeedDocuments = {
     generateTailoredResume,
-    generateCoverLetter,
     buildTailoredResumeTemplate,
-    buildCoverLetterTemplate,
     getBaseResumeText,
   };
 }

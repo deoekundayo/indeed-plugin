@@ -1,5 +1,5 @@
 /**
- * Service worker: save generated documents as Microsoft Word (.docx) files.
+ * Service worker: save generated resumes as Microsoft Word (.doc) files.
  */
 importScripts("lib/word-export.js");
 
@@ -18,10 +18,9 @@ function sanitizeRoleForFilename(role) {
   );
 }
 
-function buildDocumentFilename(role, kind) {
+function buildDocumentFilename(role) {
   const safeRole = sanitizeRoleForFilename(role);
-  const suffix = kind === "cover_letter" ? "cover_letter" : "resume";
-  return `${CANDIDATE_PREFIX}_${safeRole}_${suffix}.doc`;
+  return `${CANDIDATE_PREFIX}_${safeRole}_resume.doc`;
 }
 
 function blobToDataUrl(blob) {
@@ -33,8 +32,8 @@ function blobToDataUrl(blob) {
   });
 }
 
-async function downloadWord(filename, text, title) {
-  const blob = await IndeedWordExport.textToDocxBlob(text, title);
+async function downloadWord(filename, text) {
+  const blob = await IndeedWordExport.textToDocxBlob(text, "Resume");
   const dataUrl = await blobToDataUrl(blob);
   return new Promise((resolve, reject) => {
     chrome.downloads.download(
@@ -57,20 +56,9 @@ async function downloadWord(filename, text, title) {
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.type === "SAVE_DOCUMENT") {
-    const filename = buildDocumentFilename(message.role, message.kind);
-    const title = message.kind === "cover_letter" ? "Cover Letter" : "Resume";
-    downloadWord(filename, message.content, title)
+    const filename = buildDocumentFilename(message.role);
+    downloadWord(filename, message.content)
       .then((downloadId) => sendResponse({ ok: true, filename, downloadId }))
-      .catch((e) => sendResponse({ error: e.message }));
-    return true;
-  }
-
-  if (message.type === "SAVE_BOTH") {
-    const resumeName = buildDocumentFilename(message.role, "resume");
-    const coverName = buildDocumentFilename(message.role, "cover_letter");
-    downloadWord(resumeName, message.resume, "Resume")
-      .then(() => downloadWord(coverName, message.coverLetter, "Cover Letter"))
-      .then((coverId) => sendResponse({ ok: true, files: [resumeName, coverName] }))
       .catch((e) => sendResponse({ error: e.message }));
     return true;
   }

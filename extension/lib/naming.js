@@ -1,5 +1,5 @@
 /**
- * File names: Adeola_Ekundayo_{Role}_resume | _cover_letter
+ * File names: Adeola_Ekundayo_{Role}_resume.doc
  */
 const CANDIDATE_PREFIX = "Adeola_Ekundayo";
 
@@ -16,10 +16,9 @@ function sanitizeRoleForFilename(role) {
     .slice(0, 80) || "Job";
 }
 
-function buildDocumentFilename(role, kind) {
+function buildDocumentFilename(role) {
   const safeRole = sanitizeRoleForFilename(role);
-  const suffix = kind === "cover_letter" ? "cover_letter" : "resume";
-  return `${CANDIDATE_PREFIX}_${safeRole}_${suffix}.doc`;
+  return `${CANDIDATE_PREFIX}_${safeRole}_resume.doc`;
 }
 
 if (typeof globalThis !== "undefined") {

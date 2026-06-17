@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Indeed Job Assistant",
-  "version": "1.6.1",
-  "description": "Tailored resume and cover letter for Indeed jobs from your base resume.",
+  "version": "2.0.0",
+  "description": "Tailored resume generation for Indeed jobs from your base resume.",
   "permissions": ["storage", "downloads", "activeTab"],
   "host_permissions": [
     "https://*.indeed.com/*",
@@ -18,7 +18,6 @@
         "lib/naming.js",
         "lib/resume-format.js",
         "lib/base-resume.js",
-        "lib/cover-letter-format.js",
         "lib/documents.js",
         "content.js"
       ],

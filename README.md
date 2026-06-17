@@ -1,6 +1,6 @@
 # Indeed Plugin
 
-Chrome extension for **Adeola Ekundayo** that tailors your resume and cover letter on Indeed job pages, then saves **Microsoft Word** files you can review before applying.
+Chrome extension for **Adeola Ekundayo** that tailors your resume on Indeed job pages, then saves a **Microsoft Word** file you can review before applying.
 
 Base resume: your provided PDF (text embedded in the extension; original at `extension/assets/Adeola_Ekundayo_base_resume.pdf`).
 
@@ -11,7 +11,6 @@ Each job uses the role title from the Indeed listing:
 | Document | Filename example |
 |----------|------------------|
 | Resume | `Adeola_Ekundayo_Full_Stack_Developer_resume.doc` |
-| Cover letter | `Adeola_Ekundayo_Full_Stack_Developer_cover_letter.doc` |
 
 Spaces and special characters in the role become underscores.
 
@@ -28,10 +27,8 @@ Spaces and special characters in the role become underscores.
 1. Log in to [indeed.com](https://www.indeed.com) in Chrome.
 2. Open any **job posting** (full job view page).
 3. A **Job Assistant** panel appears on the right:
-   - **Generate & save both** — tailored resume + cover letter
-   - **Save tailored resume** / **Save cover letter** — one at a time
-   - **Fill apply form** — pastes cover letter into an open Indeed Apply textarea
-4. Chrome shows a **Save As** dialog for each Word file so you can pick where to save and open them to review.
+   - **Generate & save resume** — tailored resume for this job
+4. Chrome shows a **Save As** dialog for the Word file so you can pick where to save and open it to review.
 
 ## Tailoring rules
 
@@ -58,9 +55,9 @@ extension/
   lib/
     base-resume.js    # Adeola's resume structure
     resume-format.js  # Job-based tailoring
-    documents.js      # Generate resume / cover letter
+    documents.js      # Generate resume
     word-export.js    # Word (.doc) export
-    naming.js         # Adeola_Ekundayo_{Role}_*
+    naming.js         # Adeola_Ekundayo_{Role}_resume.doc
   assets/
     Adeola_Ekundayo_base_resume.pdf
   options.html        # OpenAI settings

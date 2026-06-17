@@ -1,5 +1,5 @@
 /**
- * Indeed page: detect job, panel UI, generate & save tailored documents.
+ * Indeed page: detect job, panel UI, generate & save tailored resume.
  */
 
 (function init() {
@@ -75,99 +75,27 @@
     };
   }
 
-  function saveDocument(role, kind, content) {
+  function saveDocument(role, content) {
     return chrome.runtime.sendMessage({
       type: "SAVE_DOCUMENT",
       role,
-      kind,
       content,
     });
   }
 
-  function saveBoth(role, resume, coverLetter) {
-    return chrome.runtime.sendMessage({
-      type: "SAVE_BOTH",
-      role,
-      resume,
-      coverLetter,
-    });
-  }
-
-  async function generateAndSave(kind, job, panel) {
+  async function generateResume(job, panel) {
     const role = job.title || "Job";
-    setStatus(panel, "Generating…");
+    setStatus(panel, "Generating tailored resume…");
 
     try {
       const opts = await getGenOptions();
-      const content =
-        kind === "resume"
-          ? await IndeedDocuments.generateTailoredResume(job, opts)
-          : await IndeedDocuments.generateCoverLetter(job, opts);
-
-      const res = await saveDocument(role, kind, content);
+      const resume = await IndeedDocuments.generateTailoredResume(job, opts);
+      const res = await saveDocument(role, resume);
       if (res?.error) throw new Error(res.error);
-      const name = IndeedNaming.buildDocumentFilename(role, kind);
+      const name = IndeedNaming.buildDocumentFilename(role);
       setStatus(panel, `Saved: ${name}`);
     } catch (e) {
       setStatus(panel, e.message || "Failed to save", true);
-    }
-  }
-
-  async function generateBoth(job, panel) {
-    const role = job.title || "Job";
-    setStatus(panel, "Generating resume & cover letter…");
-
-    try {
-      const opts = await getGenOptions();
-      const [resume, coverLetter] = await Promise.all([
-        IndeedDocuments.generateTailoredResume(job, opts),
-        IndeedDocuments.generateCoverLetter(job, opts),
-      ]);
-
-      const res = await saveBoth(role, resume, coverLetter);
-      if (res?.error) throw new Error(res.error);
-
-      const rName = IndeedNaming.buildDocumentFilename(role, "resume");
-      const cName = IndeedNaming.buildDocumentFilename(role, "cover_letter");
-      setStatus(panel, `Saved: ${rName} & ${cName}`);
-    } catch (e) {
-      setStatus(panel, e.message || "Failed", true);
-    }
-  }
-
-  function fillCoverLetter(text) {
-    const selectors = [
-      'textarea[name*="cover" i]',
-      'textarea[id*="cover" i]',
-      'textarea[aria-label*="cover" i]',
-      'textarea[name*="message"]',
-      "textarea",
-    ];
-    for (const sel of selectors) {
-      const ta = document.querySelector(sel);
-      if (ta) {
-        ta.focus();
-        ta.value = text;
-        ta.dispatchEvent(new Event("input", { bubbles: true }));
-        ta.dispatchEvent(new Event("change", { bubbles: true }));
-        return true;
-      }
-    }
-    return false;
-  }
-
-  async function fillApplication(job, panel) {
-    setStatus(panel, "Generating cover letter for form…");
-    try {
-      const opts = await getGenOptions();
-      const cover = await IndeedDocuments.generateCoverLetter(job, opts);
-      if (fillCoverLetter(cover)) {
-        setStatus(panel, "Cover letter pasted into form. Review before submitting.");
-      } else {
-        setStatus(panel, "Open the Apply form first, then click Fill again.", true);
-      }
-    } catch (e) {
-      setStatus(panel, e.message, true);
     }
   }
 
@@ -187,24 +115,14 @@
         <div class="ija-company">${escapeHtml(job.company || "Unknown company")}</div>
       </div>
       <div class="ija-actions">
-        <button type="button" data-action="both" class="ija-btn ija-primary">Generate & save both</button>
-        <button type="button" data-action="resume" class="ija-btn">Save tailored resume</button>
-        <button type="button" data-action="cover" class="ija-btn">Save cover letter</button>
-        <button type="button" data-action="fill" class="ija-btn ija-secondary">Fill apply form</button>
+        <button type="button" data-action="resume" class="ija-btn ija-primary">Generate & save resume</button>
       </div>
       <p class="ija-hint">Resume tailored to this job: summary, skills, and projects adjust per description.</p>
       <div class="ija-status"></div>
     `;
 
     panel.querySelector(".ija-close").addEventListener("click", () => panel.remove());
-    panel.querySelector('[data-action="both"]').addEventListener("click", () => generateBoth(job, panel));
-    panel.querySelector('[data-action="resume"]').addEventListener("click", () =>
-      generateAndSave("resume", job, panel)
-    );
-    panel.querySelector('[data-action="cover"]').addEventListener("click", () =>
-      generateAndSave("cover_letter", job, panel)
-    );
-    panel.querySelector('[data-action="fill"]').addEventListener("click", () => fillApplication(job, panel));
+    panel.querySelector('[data-action="resume"]').addEventListener("click", () => generateResume(job, panel));
 
     document.body.appendChild(panel);
     return panel;
