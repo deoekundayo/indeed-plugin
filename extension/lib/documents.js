@@ -12,10 +12,12 @@ GitHub: github.com/deoekundayo
 Portfolio: deosportfolio.netlify.app
 3. Do NOT add employers, projects, degrees, certifications, or skills not in the base resume.
 4. Do NOT paste the job description or add company-specific sections.
-5. REWORD the Professional Summary for the target job using only facts already in the base resume (emphasize matching skills).
-6. REORDER Technical Skills category lines and Projects entries so the most job-relevant items appear first. Each skill line must use format: Category: skill1, skill2, skill3 (one category per line).
-7. Education, Work Experience, and Developer Mindset must stay truthful — same employers, dates, and bullet facts.
-8. Output plain text only (section title on its own line, bullets with •).`;
+5. REWORD the Professional Summary for the target job — emphasize technologies and experience that match the job description.
+6. REORDER Technical Skills category lines and skills within each line to match the job. Format: Category: skill1, skill2, skill3 (one category per line).
+7. PROJECTS: Include ONLY the 2–3 most relevant projects from the base resume for this job. Omit projects that do not fit. Reorder remaining projects with the best match first. Reorder bullets within each project to highlight job-relevant work. Use at most 3 bullets per project.
+8. Reorder Education entries when relevant (e.g., analytics jobs → emphasize Google Data Analytics).
+9. Work Experience and Developer Mindset must stay truthful — same employers, dates, and bullet facts.
+10. Output plain text only (section title on its own line, bullets with •).`;
 
 function getBaseResumeText() {
   return IndeedResumeFormat.buildTailoredResumeText(
@@ -28,7 +30,7 @@ function buildTailoredResumeTemplate(job) {
   return IndeedResumeFormat.buildTailoredResumeText(job, IndeedBaseResume.RESUME_STRUCTURE);
 }
 
-function buildCoverLetterTemplate(job, profile) {
+function buildCoverLetterTemplate(job, profile, tailoredResume) {
   const title = job.title || "the open position";
   const company = job.company || "your organization";
   const today = new Date().toLocaleDateString("en-US", {
@@ -36,6 +38,16 @@ function buildCoverLetterTemplate(job, profile) {
     month: "long",
     day: "numeric",
   });
+
+  const projectMentions = (tailoredResume || "")
+    .split("\n")
+    .filter((line) => / — .+\.(com|app|netlify)/i.test(line))
+    .map((line) => line.split(" — ")[0].trim())
+    .slice(0, 3);
+  const projectLine =
+    projectMentions.length > 0
+      ? `My most relevant project experience includes ${projectMentions.join(", ")}.`
+      : "My project experience includes responsive web applications built with JavaScript, React, and Node.js.";
 
   return `${today}
 
@@ -46,7 +58,7 @@ Dear Hiring Manager,
 
 I am writing to apply for the ${title} position at ${company}. I am an entry-level full-stack developer with training through The University of Texas at Austin Full Stack Software Development Program and hands-on experience building responsive web applications using JavaScript, React, Node.js, Express, and databases.
 
-My project experience includes Carolina Care Mobility (carolinacaremobility.com), my portfolio at deosportfolio.netlify.app, a restaurant admin dashboard demo, and the TechEdge Survey Platform. I have also completed the AWS re/Start Program at Per Scholas and the Google Data Analytics Professional Certificate.
+${projectLine} I have also completed the AWS re/Start Program at Per Scholas and the Google Data Analytics Professional Certificate.
 
 I bring strong communication and teamwork from customer service roles at Paradies Lagardère and Harris Teeter, and I am motivated to grow in a collaborative engineering environment.
 
@@ -90,7 +102,7 @@ async function generateTailoredResume(job, options) {
       options.openaiApiKey,
       options.openaiModel,
       RESUME_SYSTEM_PROMPT,
-      `TARGET JOB — tailor summary wording and reorder skills/projects to match:\nTitle: ${job.title}\nCompany: ${job.company}\nDescription:\n${(job.description || "").slice(0, 3500)}\n\nBASE RESUME (only source of truth — no new facts):\n${getBaseResumeText()}`
+      `TARGET JOB — tailor wording, organization, and which projects to include:\nTitle: ${job.title}\nCompany: ${job.company}\nDescription:\n${(job.description || "").slice(0, 3500)}\n\nBASE RESUME (only source of truth — no new facts):\n${getBaseResumeText()}\n\nTEMPLATE PREVIEW (job-aware selection already applied — use as guide):\n${templateResume}`
     );
     return aiResume;
   }
@@ -100,16 +112,17 @@ async function generateTailoredResume(job, options) {
 
 async function generateCoverLetter(job, options) {
   const { PROFILE } = globalThis.IndeedBaseResume;
+  const tailoredResume = buildTailoredResumeTemplate(job);
 
   if (options?.openaiApiKey) {
     return generateWithOpenAI(
       options.openaiApiKey,
       options.openaiModel,
       "Write a professional cover letter. Use ONLY facts from the resume. No placeholders. Plain text.",
-      `JOB: ${job.title} at ${job.company}\n\nRESUME:\n${getBaseResumeText().slice(0, 5000)}`
+      `JOB: ${job.title} at ${job.company}\nDescription:\n${(job.description || "").slice(0, 2000)}\n\nTAILORED RESUME:\n${tailoredResume.slice(0, 5000)}`
     );
   }
-  return buildCoverLetterTemplate(job, PROFILE);
+  return buildCoverLetterTemplate(job, PROFILE, tailoredResume);
 }
 
 if (typeof globalThis !== "undefined") {

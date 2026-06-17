@@ -192,7 +192,7 @@
         <button type="button" data-action="cover" class="ija-btn">Save cover letter</button>
         <button type="button" data-action="fill" class="ija-btn ija-secondary">Fill apply form</button>
       </div>
-      <p class="ija-hint">Summary, skills &amp; projects tailored to the job. Saves Word (.doc) — pick a folder to review.</p>
+      <p class="ija-hint">Resume tailored to this job: summary, skills, and projects adjust per description.</p>
       <div class="ija-status"></div>
     `;
 
