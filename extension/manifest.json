@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Indeed Job Assistant",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Tailored resume and cover letter for Indeed jobs from your base resume.",
   "permissions": ["storage", "downloads", "activeTab"],
   "host_permissions": [

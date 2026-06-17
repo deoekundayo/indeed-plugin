@@ -7,7 +7,7 @@ function jobKeywords(job) {
   return IndeedResumeFormat.jobKeywords(job);
 }
 
-function extractJobFocus(job) {
+function extractCoverLetterFocus(job) {
   const combined = `${job.title || ""} ${job.description || ""}`.toLowerCase();
   return {
     isDesign: /ui|ux|design|figma|layout|accessibility|responsive|frontend|css|user experience/i.test(combined),
@@ -96,7 +96,7 @@ function buildTrainingParagraph(focus, tailoredResume) {
 }
 
 function buildCoverLetterText(job, profile, tailoredResume) {
-  const focus = extractJobFocus(job);
+  const focus = extractCoverLetterFocus(job);
   const company = focus.company || "your organization";
   const salutation = `Dear ${company} Hiring Manager,`;
 
@@ -124,6 +124,6 @@ function buildCoverLetterText(job, profile, tailoredResume) {
 if (typeof globalThis !== "undefined") {
   globalThis.IndeedCoverLetterFormat = {
     buildCoverLetterText,
-    extractJobFocus,
+    extractCoverLetterFocus,
   };
 }
